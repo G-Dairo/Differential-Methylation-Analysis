@@ -8,11 +8,14 @@
 # Usage: Rscript environment/00_setup_environment.R
 # =============================================================
 
+# Set CRAN mirror
+options(repos = c(CRAN = "https://cloud.r-project.org"))
+
 # Install essential Bioconductor packages
 if (!require("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
  
-BiocManager::install(version = "3.21")
+BiocManager::install(version = "3.21", ask = FALSE)
  
 # Core methylation analysis packages
 essential_packages <- c(
