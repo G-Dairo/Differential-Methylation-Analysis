@@ -22,4 +22,5 @@ conda install -n methylation_env -c conda-forge -c bioconda \
     bioconductor-genefilter \
     bioconductor-annotate \
     bioconductor-minfi \
-    r-xml
+    r-xml \
+    bioconductor-dmrcate
