@@ -24,13 +24,12 @@ BiocManager::install(version = "3.21", ask = FALSE)
 #   - GenomicRanges, SummarizedExperiment, AnnotationDbi, Biostrings
 #   - XVector, Rsamtools, GenomicAlignments, GenomicFeatures
 #   - rtracklayer, DelayedArray, HDF5Array, DelayedMatrixStats
-#   - bumphunter, genefilter, annotate, minfi, GEOquery
+#   - bumphunter, genefilter, annotate, minfi, GEOquery, DMRcate
 
 # Install remaining higher-level Bioconductor packages
 remaining_bioc <- c(
     "missMethyl",                                    # Specialized methylation functions
     "limma",                                         # Linear models for differential analysis
-    "DMRcate",                                       # Differentially methylated regions
     "sva",                                           # Surrogate variable analysis
     "IlluminaHumanMethylationEPICv2anno.20a1.hg38",  # EPIC v2.0 annotations
     "IlluminaHumanMethylationEPICv2manifest",         # EPIC v2.0 manifest
@@ -76,7 +75,7 @@ set.seed(12345)  # Ensure reproducible results
 # Set up working directory structure
 # Uses current directory if running from project root via SLURM
 # Override by setting PROJECT_DIR environment variable
-project_dir <- Sys.getenv("PROJECT_DIR", unset = "~/methylation")
+project_dir <- Sys.getenv("PROJECT_DIR", unset = "/home/gsd67/Projects/Epigenetics/methylation")
 dir.create(project_dir, recursive = TRUE, showWarnings = FALSE)
 setwd(project_dir)
 
