@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --partition=main 
-#SBATCH --job-name=methylation_setup
+#SBATCH --job-name=methy_setup
 #SBATCH --nodes=1
 #SBATCH --ntasks=1 
 #SBATCH --output=logs/00_setup_%j.out
