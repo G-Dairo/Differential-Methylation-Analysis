@@ -1,0 +1,20 @@
+Loading rgSet...
+Loaded: 40 samples, 1105209 probes
+Calculating detection p-values...
+Failed probes: 8331 out of 936990 
+Failed samples: 1 out of 40 
+Generating QC plots...
+null device 
+          1 
+QC plots saved to plots/qc_summary.pdf
+Generating QC report...
+null device 
+          1 
+Removing 1 poor quality samples...
+Failed samples: GSM7698439_LNCAP_250_1 
+Saving QC results...
+QC summary saved to results/qc/qc_summary.csv
+
+QC complete!
+Samples remaining: 39 
+Probes remaining: 1105209 
