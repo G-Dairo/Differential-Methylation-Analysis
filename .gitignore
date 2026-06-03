@@ -1,0 +1,7 @@
+# Large data files - not tracked in Git
+data/raw/*.idat
+data/processed/*.rds
+data/processed/*.RData
+# Intermediate generated plots
+plots/*.pdf
+results/qc/*.pdf
