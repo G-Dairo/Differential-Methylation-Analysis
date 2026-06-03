@@ -1,0 +1,21 @@
+Loading sample sheet...
+Samples to load: 40 
+Reading IDAT files - this may take several minutes...
+Data import complete!
+class: RGChannelSetExtended 
+dim: 1105209 40 
+metadata(0):
+assays(5): Green Red GreenSD RedSD NBeads
+rownames(1105209): 1600157 1600179 ... 99810982 99810990
+rowData names(0):
+colnames(40): GSM7698435_PREC_500_1 GSM7698436_PREC_250_1 ...
+  GSM7698473_FD07746850 GSM7698474_FD07747708
+colData names(8): Basename Sample_Name ... Array filenames
+Annotation
+  array: IlluminaHumanMethylationEPICv2
+  annotation: 20a1.hg38
+
+Extracting probe information...
+Probe info dimensions: 128271 probes x 8 columns
+Saving rgSet to data/processed/rgSet.rds...
+Done!
