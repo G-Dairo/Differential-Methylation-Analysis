@@ -1,0 +1,31 @@
+Loading filtered data...
+Samples: 39 
+Probes: 719922 
+
+Running PCA...
+Variance explained by top 5 PCs:
+  PC 1 : 32.4 %
+  PC 2 : 19.7 %
+  PC 3 : 14.3 %
+  PC 4 : 11.9 %
+  PC 5 : 7.5 %
+
+Generating QC plots...
+null device 
+          1 
+PCA plots saved to plots/sample_qc_pca.pdf
+Generating correlation heatmap...
+null device 
+          1 
+Correlation heatmap saved to plots/sample_correlation_heatmap.pdf
+
+Running Mahalanobis distance outlier detection...
+Outlier threshold (chi-sq 97.5%, df=5): 12.83 
+No outlier samples detected - data quality looks good
+Outlier summary saved to results/qc/outlier_summary.csv
+
+Final dataset saved to data/processed/final_data.rds
+Final samples: 39 
+Final probes: 719922 
+
+Outlier detection complete!
