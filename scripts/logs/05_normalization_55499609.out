@@ -1,0 +1,34 @@
+Loading QC-cleaned data...
+Samples loaded: 39 
+Probes loaded: 1105209 
+Failed probes to remove: 8738 
+Applying functional normalization...
+Normalization complete!
+class: GenomicRatioSet 
+dim: 930075 39 
+metadata(0):
+assays(2): Beta CN
+rownames(930075): cg00381604_BC11 cg21870274_BC21 ... cg27912920_TC21
+  cg16855331_BC21
+rowData names(0):
+colnames(39): GSM7698435_PREC_500_1 GSM7698436_PREC_250_1 ...
+  GSM7698473_FD07746850 GSM7698474_FD07747708
+colData names(11): Basename Sample_Name ... yMed predictedSex
+Annotation
+  array: IlluminaHumanMethylationEPICv2
+  annotation: 20a1.hg38
+Preprocessing
+  Method: NA
+  minfi version: NA
+  Manifest version: NA
+Removed 8705 failed probes
+Probes remaining after filtering: 921370 
+Extracting beta and M values...
+Beta values dimensions: 921370 probes x 39 samples
+M values dimensions: 921370 probes x 39 samples
+
+Beta value range: 0 to 0.9911 
+Saving normalized data...
+
+Normalization complete!
+Output saved to data/processed/normalized_data.rds
