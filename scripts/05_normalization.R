@@ -8,6 +8,8 @@
 #         data/processed/sample_info_qc.csv
 # Output: data/processed/normalized_data.rds
 # Usage:  Rscript scripts/05_normalization.R
+# NOTE: preprocessCore must be installed with threading disabled on HPC clusters
+# Fix: R -e 'BiocManager::install("preprocessCore", configure.args = "--disable-threading", force = TRUE, ask = FALSE)'
 # =============================================================
 
 library(minfi)
