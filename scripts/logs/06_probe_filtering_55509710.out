@@ -1,0 +1,27 @@
+Loading normalized data...
+Starting probes: 921370 
+Samples: 39 
+
+Fetching probe annotations...
+Cross-reactive / SNP-affected probes: 180909 
+Sex chromosome probes: 23538 
+Total problematic probes to remove: 201429 
+Probes after filtering: 719941 
+
+Removing probes with incomplete or non-finite values...
+Probes removed (incomplete/non-finite): 19 
+Final probes remaining: 719922 
+
+── Filtering Summary ──────────────────────────────
+Started with:                921370 probes
+Removed (cross-reactive/SNP): 180909 probes
+Removed (sex chromosomes):    23538 probes
+Removed (incomplete/nonfinite): 19 probes
+Final clean probes:           719922 probes
+Samples:                      39 
+───────────────────────────────────────────────────
+
+Saving filtered data...
+Saved to data/processed/filtered_data.rds
+
+Probe filtering complete!
