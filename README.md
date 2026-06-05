@@ -146,3 +146,127 @@ but will appear locally after running the pipeline.
 - All scripts are designed to run non-interactively via SLURM on the
   Amarel HPC cluster at Rutgers University.
 - Set the `PROJECT_DIR` environment variable to change the project root path.
+
+---
+
+### Step 5: Normalization
+**Script:** `scripts/05_normalization.R` | **SLURM:** `slurm/run_05_normalization.sh`
+
+Applies functional normalization (`preprocessFunnorm`) to correct for technical
+variation introduced during sample preparation and array hybridization. This method
+uses control probes built into the EPIC array to estimate and remove technical
+effects including background fluorescence (`bgCorr = TRUE`) and dye bias —
+the tendency for Red and Green channels to have different baseline intensities
+(`dyeCorr = TRUE`). After normalization, failed probes identified in Step 4 are
+removed, and methylation is extracted as two complementary value types:
+
+- **Beta values** (0–1): the proportion of methylation at each CpG site.
+  Intuitive and interpretable but statistically suboptimal due to
+  heteroscedasticity at the extremes.
+- **M values** (log2 ratio): better statistical properties for linear modelling
+  and differential analysis, used in all downstream statistical tests.
+
+**Why this matters:** Without normalization, technical differences between samples
+can masquerade as biological differences, leading to false discoveries. Functional
+normalization is the recommended approach for datasets with mixed cell types or
+multiple biological groups.
+
+```bash
+sbatch slurm/run_05_normalization.sh
+```
+
+> **HPC Note:** `preprocessCore` must be reinstalled with threading disabled on
+> Amarel before running this step:
+> ```bash
+> R -e 'BiocManager::install("preprocessCore", configure.args = "--disable-threading", force = TRUE, ask = FALSE)'
+> ```
+
+**Result:** 921,370 probes × 39 samples. Beta values range: 0 to 0.99.
+
+---
+
+### Step 6: Probe Filtering
+**Script:** `scripts/06_probe_filtering.R` | **SLURM:** `slurm/run_06_probe_filtering.sh`
+
+Removes three categories of probes that could introduce noise or confounding
+into downstream differential methylation analysis:
+
+1. **Cross-reactive probes** — probes that can bind to multiple locations in
+   the genome, meaning their signal is a mixture of methylation from different
+   regions rather than a single CpG site.
+
+2. **SNP-affected probes** — probes where a Single Nucleotide Polymorphism
+   (SNP) sits at or near the CpG being measured. Since SNPs change the DNA
+   sequence, they affect probe binding and make the signal reflect genetic
+   variation rather than true methylation differences. Three SNP positions
+   are checked: within the probe body (`Probe_rs`), at the CpG site itself
+   (`CpG_rs`), and at the single base extension position (`SBE_rs`).
+
+3. **Sex chromosome probes** — probes on chrX and chrY behave differently
+   between males and females due to X-chromosome inactivation and Y-chromosome
+   absence in females. Removing them prevents biological sex from confounding
+   the analysis.
+
+Finally, probes with missing or non-finite M-values (arising from zero signal
+in one channel, producing log2(0) = -Inf) are removed to ensure complete data
+for statistical testing.
+
+**Why this matters:** Including these probes would introduce false positives
+in differential methylation analysis — apparent methylation differences that
+reflect technical artifacts or genetic variation rather than true epigenetic
+changes.
+
+```bash
+sbatch slurm/run_06_probe_filtering.sh
+```
+
+**Filtering Summary:**
+| Filter | Probes Removed |
+|--------|---------------|
+| Cross-reactive / SNP-affected | 180,909 |
+| Sex chromosomes (chrX, chrY) | 23,538 |
+| Incomplete / non-finite | 19 |
+| **Final clean probes** | **719,922** |
+
+---
+
+### Step 7: Sample Outlier Detection
+**Script:** `scripts/07_outlier_detection.R` | **SLURM:** `slurm/run_07_outlier_detection.sh`
+
+Performs a final sample-level quality check before differential methylation
+analysis using two complementary approaches:
+
+**Principal Component Analysis (PCA)** reduces the 719,922-dimensional
+methylation data to a small number of components that capture the major
+patterns of variation. Samples are plotted in PC space — samples that cluster
+far from their biological group are candidates for removal. The scree plot
+shows how much biological structure is captured by the top PCs.
+
+**Mahalanobis distance** provides a statistical measure of how far each sample
+sits from the group centre in the top 5 PC space, accounting for correlations
+between components. Samples beyond the 97.5th percentile of a chi-squared
+distribution (threshold = 12.83) are flagged as outliers.
+
+A **sample-to-sample correlation heatmap** is also generated using beta values,
+providing a visual overview of how similar samples are to each other — samples
+of the same cell line should cluster together with high correlation.
+
+**Why this matters:** Outlier samples that passed earlier QC filters can still
+have aberrant methylation patterns that distort group comparisons. Detecting
+them before statistical testing prevents a single bad sample from generating
+false discoveries across thousands of CpG sites.
+
+```bash
+sbatch slurm/run_07_outlier_detection.sh
+```
+
+**Results:**
+| Metric | Result |
+|--------|--------|
+| Outliers detected | 0 |
+| Mahalanobis threshold | 12.83 |
+| PC1 variance explained | 32.4% |
+| PC2 variance explained | 19.7% |
+| Top 5 PCs combined | 85.8% |
+| Final samples | 39 |
+| Final probes | 719,922 |
