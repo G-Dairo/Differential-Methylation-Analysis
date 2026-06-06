@@ -1,0 +1,33 @@
+Loading final data...
+Samples: 39 
+Probes: 719922 
+
+Defining comparison groups...
+LNCAP samples: 8 
+PREC samples: 9 
+Total samples in comparison: 17 
+
+Creating design matrix...
+Design matrix groups: LNCAP vs PREC 
+Design matrix dimensions: 17 samples x 2 groups
+Defining contrasts...
+Contrast: LNCAP - PREC 
+
+Fitting linear models across 719922 CpG sites...
+Model fitting complete!
+Extracting results...
+Total CpG sites tested: 719922 
+
+── DMP Summary ────────────────────────────────────
+Significant DMPs (FDR < 0.05):               476854 
+Significant DMPs (FDR < 0.01):               438381 
+Significant DMPs (FDR < 0.05 & |M| > 1):    328376 
+───────────────────────────────────────────────────
+Hypermethylated in LNCAP (cancer): 196778 
+Hypomethylated in LNCAP (cancer):  280076 
+
+Adding genomic annotation...
+Saving results...
+Results saved to results/differential/dmp_results_annotated.csv
+
+Differential methylation analysis complete!
