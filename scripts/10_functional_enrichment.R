@@ -58,7 +58,7 @@ go_results <- gometh(
     sig.cpg    = sig_cpgs,
     all.cpg    = all_cpgs,
     collection = "GO",
-    array.type = "EPICv2"
+    array.type = "EPIC_V2"
 )
 go_results <- go_results[order(go_results$P.DE), ]
 
@@ -80,7 +80,7 @@ kegg_results <- gometh(
     sig.cpg    = sig_cpgs,
     all.cpg    = all_cpgs,
     collection = "KEGG",
-    array.type = "EPICv2"
+    array.type = "EPIC_V2"
 )
 kegg_results <- kegg_results[order(kegg_results$P.DE), ]
 
