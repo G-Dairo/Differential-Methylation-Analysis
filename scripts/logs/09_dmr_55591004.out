@@ -1,0 +1,60 @@
+Loading DMP results...
+Samples: 17 
+Probes: 719922 
+
+Recreating design and contrast matrices...
+Contrast: LNCAP vs PREC
+
+Annotating CpGs for DMR analysis...
+This fits the linear model and prepares spatial correlation...
+
+
+Annotation complete!
+Significant CpGs for DMR analysis: 464638 
+
+Finding differentially methylated regions...
+Parameters: lambda=1000bp, C=2, pcutoff=0.05
+DMR identification complete!
+Total DMRs found: 102937 
+
+Extracting genomic ranges...
+
+
+
+── DMR Summary ─────────────────────────────────────
+Total DMRs identified:       102937 
+Median DMR width (bp):       734 
+Median CpGs per DMR:         3 
+DMRs with >= 5 CpGs:         29105 
+Hypermethylated DMRs (cancer): 42352 
+Hypomethylated DMRs (cancer):  60585 
+────────────────────────────────────────────────────
+
+Top 10 DMRs by significance:
+   seqnames    start      end width no.cpgs     meandiff Stouffer        HMFDR
+1      chr6 33188387 33213747 25361     227  0.038831941        0 2.115156e-21
+2      chr6 33311786 33324252 12467     172  0.114485141        0 6.322976e-19
+3      chr6 33262848 33280937 18090     143  0.066665528        0 4.460564e-18
+4      chr7 27150616 27176257 25642     138  0.488094505        0 5.296907e-26
+5      chr6 32146548 32155924  9377     124  0.299218139        0 1.428121e-23
+6      chr6 32834821 32845805 10985     117  0.007015889        0 1.618149e-21
+11    chr11 31796262 31816448 20187      96  0.209903084        0 2.361950e-22
+12     chr2 63046301 63060551 14251      95  0.364716028        0 4.336532e-20
+19     chr6 32078823 32091828 13006      83 -0.202961192        0 2.843470e-17
+21     chr6 30682425 30692887 10463      80  0.223249318        0 1.648668e-23
+                                                                                           overlapping.genes
+1                                                  COL11A2, RXRB, RNY4P10, SLC39A7, HSD17B8, MIR219A1, RING1
+2                                                                        TAPBP, ZBTB22, DAXX, SMIM40, SMIM40
+3                                                                               VPS52, RPS18, B3GALT4, WDR46
+4  HOXA3, AC004080.6, HOXA-AS3, AC004080.5, HOXA7, AC004080.4, HOXA9, AC004080.3, HOXA10-AS, MIR196B, HOXA10
+5                                                            PRRT1, AL662884.4, AL662884.3, PPT2, PPT2-EGFL8
+6                                                            AL669918.1, TAP2, PSMB8, PSMB8-AS1, PSMB9, TAP1
+11                                                                                  PAX6, PAUPAR, AL035078.4
+12                                                                                   EHBP1, AC007098.1, OTX1
+19                                                                                                      TNXB
+21                                                                                              PPP1R18, NRM
+
+Saving DMR results...
+Results saved to results/differential/dmr_results.csv
+
+DMR analysis complete!
