@@ -1,0 +1,81 @@
+Loading DMP and DMR results...
+Total CpGs tested: 719922 
+Significant DMPs (FDR<0.05): 476854 
+Total DMRs: 102937 
+
+── Part 1: CpG-based GO and KEGG Enrichment ────────────────────────────
+Significant CpGs for enrichment: 476854 
+Background CpGs: 719922 
+
+Running GO enrichment analysis...
+GO terms tested: 21980 
+Significant GO terms (FDR<0.05): 329 
+
+Top 10 GO terms:
+           ONTOLOGY                             TERM     N    DE         P.DE
+GO:0032501       BP multicellular organismal process  7220  7066 5.194953e-35
+GO:0071944       CC                   cell periphery  5724  5621 5.767681e-35
+GO:0005886       CC                  plasma membrane  5285  5193 2.079366e-33
+GO:0032502       BP            developmental process  6455  6315 5.516936e-30
+GO:0048856       BP anatomical structure development  5926  5800 9.434603e-28
+GO:0003674       MF               molecular_function 17040 16453 1.328287e-19
+GO:0003008       BP                   system process  2228  2202 2.441483e-19
+GO:0050789       BP regulation of biological process 11383 11033 2.989086e-18
+GO:0065007       BP            biological regulation 11755 11389 4.263778e-18
+GO:0023052       BP                        signaling  6316  6159 7.285540e-18
+                    FDR
+GO:0032501 6.338681e-31
+GO:0071944 6.338681e-31
+GO:0005886 1.523482e-29
+GO:0032502 3.031556e-26
+GO:0048856 4.147451e-24
+GO:0003674 4.865959e-16
+GO:0003008 7.666257e-16
+GO:0050789 8.212514e-15
+GO:0065007 1.041309e-14
+GO:0023052 1.601362e-14
+GO results saved to results/annotation/go_enrichment_results.csv
+
+Running KEGG pathway enrichment analysis...
+KEGG pathways tested: 371 
+Significant KEGG pathways (FDR<0.05): 25 
+
+Top 10 KEGG pathways:
+                                     Description   N  DE         P.DE
+hsa04519                      Cadherin signaling 393 392 7.889110e-07
+hsa04080 Neuroactive ligand-receptor interaction 343 341 3.238536e-05
+hsa04014                   Ras signaling pathway 228 228 6.130163e-05
+hsa05200                      Pathways in cancer 509 503 6.226158e-05
+hsa04517                      IgSF CAM signaling 286 285 6.486258e-05
+hsa04820            Cytoskeleton in muscle cells 225 225 7.005183e-05
+hsa04024                  cAMP signaling pathway 219 219 9.103158e-05
+hsa05165          Human papillomavirus infection 318 316 1.298524e-04
+hsa05205                 Proteoglycans in cancer 198 198 2.397460e-04
+hsa04082            Neuroactive ligand signaling 192 192 2.834318e-04
+                 FDR
+hsa04519 0.000292686
+hsa04080 0.004331538
+hsa04014 0.004331538
+hsa05200 0.004331538
+hsa04517 0.004331538
+hsa04820 0.004331538
+hsa04024 0.004824674
+hsa05165 0.006021906
+hsa05205 0.009882862
+hsa04082 0.010015100
+KEGG results saved to results/annotation/kegg_enrichment_results.csv
+
+── Part 2: DMR Gene Extraction and Enrichment ──────────────────────────
+Total unique genes overlapping DMRs: 29654 
+Genes in hypermethylated DMRs: 20248 
+Genes in hypomethylated DMRs:  21561 
+DMR gene list saved to results/annotation/dmr_genes.csv
+High confidence DMR genes (>=5 CpGs): 23055 
+
+Saving all enrichment results...
+
+── Enrichment Analysis Complete ────────────────────────────────────────
+GO results:      results/annotation/go_enrichment_results.csv
+KEGG results:    results/annotation/kegg_enrichment_results.csv
+DMR genes:       results/annotation/dmr_genes.csv
+────────────────────────────────────────────────────────────────────────
