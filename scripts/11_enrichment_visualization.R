@@ -35,27 +35,26 @@ cat("Loading DMP annotated results...\n")
 dmp_data    <- readRDS("data/processed/dmp_results.rds")
 results_all <- dmp_data$results_annotated
 cat("Total CpG sites:", nrow(results_all), "\n")
-cat("Columns available:", paste(colnames(results_all), collapse = ", "), "\n")
 
 # ── Extract gene symbols from annotation ─────────────────────────────────────
 # UCSC_RefGene_Name can contain multiple genes per probe separated by
-# semicolons e.g. "TP53;TP53" or "BRCA1;BRCA2"
-# We take the first gene for each probe
+# semicolons e.g. "RASGRF2;RASGRF2" or "BRCA1;BRCA2"
+# We extract the first unique non-empty gene symbol for each probe
 cat("\nExtracting gene symbols from UCSC_RefGene_Name...\n")
 gene_symbols <- sapply(results_all$UCSC_RefGene_Name, function(x) {
     if (is.na(x) || x == "") return(NA)
-    strsplit(as.character(x), ";")[[1]][1]
     genes <- strsplit(as.character(x), ";")[[1]]
-    genes <- unique(genes)                    
-    genes <- genes[genes != ""]           
+    genes <- unique(genes)
+    genes <- genes[genes != ""]
     if (length(genes) == 0) return(NA)
-    return(genes[1]) 
+    return(genes[1])
 })
+
 cat("Probes with gene annotation:",
-    sum(!is.na(gene_symbols) & gene_symbols != ""), "\n")
+    sum(!is.na(gene_symbols)), "\n")
 cat("Probes without gene annotation:",
-    sum(is.na(gene_symbols) | gene_symbols == ""), "\n")
-cat("Example gene symbols:\n")
+    sum(is.na(gene_symbols)), "\n")
+cat("Example gene symbols extracted:\n")
 print(head(unique(na.omit(gene_symbols)), 10))
 
 # ── Prepare ranked gene list for GSEA ────────────────────────────────────────
@@ -68,15 +67,24 @@ logfc                 <- results_sorted$logFC
 names(logfc)          <- gene_symbols[rownames(results_sorted)]
 
 # Remove probes with no gene annotation and duplicates
-# Keep only one probe per gene (highest absolute logFC already at top
-# after sorting)
 logfc <- logfc[!is.na(names(logfc)) & names(logfc) != ""]
 logfc <- logfc[!duplicated(names(logfc))]
 cat("Total unique genes in ranked list:", length(logfc), "\n")
 
-# Convert gene symbols to Entrez IDs for KEGG
+# ── Debug check before mapIds ─────────────────────────────────────────────────
+cat("\nDebug: checking logfc before mapIds...\n")
+cat("Length of logfc:", length(logfc), "\n")
+cat("First 10 names of logfc:\n")
+print(head(names(logfc), 10))
+cat("Any non-NA names:", sum(!is.na(names(logfc))), "\n")
+
+if (length(logfc) == 0 || all(is.na(names(logfc)))) {
+    stop("No valid gene symbols found in logfc — check UCSC_RefGene_Name extraction")
+}
+
+# ── Convert gene symbols to Entrez IDs for KEGG ───────────────────────────────
 # KEGG requires Entrez IDs rather than gene symbols
-cat("Converting to Entrez IDs for KEGG...\n")
+cat("\nConverting to Entrez IDs for KEGG...\n")
 entrez_ids <- mapIds(
     x         = org.Hs.eg.db,
     keys      = names(logfc),
@@ -211,7 +219,7 @@ hyper_genes <- unique(na.omit(gene_symbols[
 hyper_genes <- hyper_genes[hyper_genes != ""]
 
 # Extract gene symbols for hypomethylated probes
-hypo_genes  <- unique(na.omit(gene_symbols[
+hypo_genes <- unique(na.omit(gene_symbols[
     rownames(results_all[!is.na(results_all$adj.P.Val) &
                          results_all$adj.P.Val < 0.05  &
                          results_all$logFC < -1, ])
