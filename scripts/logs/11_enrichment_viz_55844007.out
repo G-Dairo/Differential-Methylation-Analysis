@@ -1,0 +1,62 @@
+Loading DMP annotated results...
+Total CpG sites: 719922 
+
+Extracting gene symbols from UCSC_RefGene_Name...
+Probes with gene annotation: 256926 
+Probes without gene annotation: 462996 
+Example gene symbols extracted:
+ [1] "RASGRF2" "ACCS"    "FLRT2"   "HPDL"    "KLHDC1"  "PLEC"    "ISM1"   
+ [8] "CLSTN1"  "ARL9"    "ZNF655" 
+
+Preparing ranked gene list...
+Total unique genes in ranked list: 24611 
+
+Debug: checking logfc before mapIds...
+Length of logfc: 24611 
+First 10 names of logfc:
+ [1] "KLHDC1"  "POGLUT3" "GATA3"   "EVC2"    "TGFBR3L" "RASSF10" "ADD3"   
+ [8] "IL17D"   "MIR196B" "GPR88"  
+Any non-NA names: 24611 
+
+Converting to Entrez IDs for KEGG...
+Genes mapped to Entrez IDs: 24045 
+
+── Part 1: GO GSEA ─────────────────────────────────────────────────────
+Running GO GSEA (this may take a few minutes)...
+Significant GO terms: 1805 
+Saved: results/annotation/go_gsea_results.csv
+Generating GO GSEA dotplot...
+Saved: plots/go_gsea_dotplot.pdf
+
+── Part 2: KEGG GSEA ───────────────────────────────────────────────────
+Running KEGG GSEA...
+Significant KEGG pathways: 80 
+Saved: results/annotation/kegg_gsea_results.csv
+Generating KEGG GSEA dotplot...
+Saved: plots/kegg_gsea_dotplot.pdf
+Generating GSEA plot for top pathway: Wnt signaling pathway 
+Saved: plots/gsea_top_kegg_pathway.pdf
+
+── Part 3: GO ORA (Directional) ────────────────────────────────────────
+Unique genes hypermethylated (FDR<0.05, logFC>1): 13380 
+Unique genes hypomethylated (FDR<0.05, logFC<-1): 15308 
+
+Running GO ORA for hypermethylated genes...
+Significant GO terms (hypermethylated): 2425 
+Saved: plots/go_ora_hyper_dotplot.pdf
+Saved: results/annotation/go_ora_hyper_results.csv
+
+Running GO ORA for hypomethylated genes...
+Significant GO terms (hypomethylated): 961 
+Saved: plots/go_ora_hypo_dotplot.pdf
+Saved: results/annotation/go_ora_hypo_results.csv
+
+── Enrichment Visualization Complete ───────────────────────────────────
+Plots saved to plots/:
+  go_gsea_dotplot.pdf
+  kegg_gsea_dotplot.pdf
+  gsea_top_kegg_pathway.pdf
+  go_ora_hyper_dotplot.pdf
+  go_ora_hypo_dotplot.pdf
+Results saved to results/annotation/
+────────────────────────────────────────────────────────────────────────
