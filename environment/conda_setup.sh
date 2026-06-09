@@ -23,4 +23,8 @@ conda install -n methylation_env -c conda-forge -c bioconda \
     bioconductor-annotate \
     bioconductor-minfi \
     r-xml \
-    bioconductor-dmrcate
+    bioconductor-dmrcate \
+    r-data.table \
+    bioconductor-clusterprofiler \
+    bioconductor-enrichplot \
+    bioconductor-dose
