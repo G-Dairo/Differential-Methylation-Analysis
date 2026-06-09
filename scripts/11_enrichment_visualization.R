@@ -45,11 +45,18 @@ cat("\nExtracting gene symbols from UCSC_RefGene_Name...\n")
 gene_symbols <- sapply(results_all$UCSC_RefGene_Name, function(x) {
     if (is.na(x) || x == "") return(NA)
     strsplit(as.character(x), ";")[[1]][1]
+    genes <- strsplit(as.character(x), ";")[[1]]
+    genes <- unique(genes)                    
+    genes <- genes[genes != ""]           
+    if (length(genes) == 0) return(NA)
+    return(genes[1]) 
 })
 cat("Probes with gene annotation:",
     sum(!is.na(gene_symbols) & gene_symbols != ""), "\n")
 cat("Probes without gene annotation:",
     sum(is.na(gene_symbols) | gene_symbols == ""), "\n")
+cat("Example gene symbols:\n")
+print(head(unique(na.omit(gene_symbols)), 10))
 
 # ── Prepare ranked gene list for GSEA ────────────────────────────────────────
 # GSEA requires ALL genes ranked by logFC — not just significant ones.
