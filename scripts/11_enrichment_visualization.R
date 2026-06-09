@@ -50,6 +50,9 @@ gene_symbols <- sapply(results_all$UCSC_RefGene_Name, function(x) {
     return(genes[1])
 })
 
+# name by CpG probe IDs not UCSC values
+names(gene_symbols) <- rownames(results_all)
+
 cat("Probes with gene annotation:",
     sum(!is.na(gene_symbols)), "\n")
 cat("Probes without gene annotation:",
