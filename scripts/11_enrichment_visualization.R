@@ -5,7 +5,7 @@
 #              GSEA and ORA approaches on GO and KEGG databases.
 #              Adapted from NGS101 enrichment tutorial for
 #              human prostate cancer methylation data.
-# Input:  data/processed/dmp_results.rds
+# Input:  data/processed/dmp_results.rds (results_annotated)
 # Output: plots/go_gsea_dotplot.pdf
 #         plots/kegg_gsea_dotplot.pdf
 #         plots/gsea_top_kegg_pathway.pdf
@@ -29,22 +29,43 @@ project_dir <- Sys.getenv("PROJECT_DIR", unset = "/home/gsd67/Projects/Epigeneti
 setwd(project_dir)
 
 # ── Load data ─────────────────────────────────────────────────────────────────
-cat("Loading DMP results...\n")
+# Use results_annotated which contains both limma statistics
+# AND genomic annotation including gene symbols (UCSC_RefGene_Name)
+cat("Loading DMP annotated results...\n")
 dmp_data    <- readRDS("data/processed/dmp_results.rds")
-results_all <- dmp_data$results_all
+results_all <- dmp_data$results_annotated
 cat("Total CpG sites:", nrow(results_all), "\n")
+cat("Columns available:", paste(colnames(results_all), collapse = ", "), "\n")
 
-# ── Prepare ranked gene list ──────────────────────────────────────────────────
+# ── Extract gene symbols from annotation ─────────────────────────────────────
+# UCSC_RefGene_Name can contain multiple genes per probe separated by
+# semicolons e.g. "TP53;TP53" or "BRCA1;BRCA2"
+# We take the first gene for each probe
+cat("\nExtracting gene symbols from UCSC_RefGene_Name...\n")
+gene_symbols <- sapply(results_all$UCSC_RefGene_Name, function(x) {
+    if (is.na(x) || x == "") return(NA)
+    strsplit(as.character(x), ";")[[1]][1]
+})
+cat("Probes with gene annotation:",
+    sum(!is.na(gene_symbols) & gene_symbols != ""), "\n")
+cat("Probes without gene annotation:",
+    sum(is.na(gene_symbols) | gene_symbols == ""), "\n")
+
+# ── Prepare ranked gene list for GSEA ────────────────────────────────────────
 # GSEA requires ALL genes ranked by logFC — not just significant ones.
 # Positive logFC = hypermethylated in LNCAP (cancer)
 # Negative logFC = hypomethylated in LNCAP (cancer)
 cat("\nPreparing ranked gene list...\n")
-results_sorted <- results_all[order(-results_all$logFC), ]
-logfc          <- results_sorted$logFC
-names(logfc)   <- rownames(results_sorted)
-logfc          <- logfc[!is.na(names(logfc))]
-logfc          <- logfc[!duplicated(names(logfc))]
-cat("Total genes in ranked list:", length(logfc), "\n")
+results_sorted        <- results_all[order(-results_all$logFC), ]
+logfc                 <- results_sorted$logFC
+names(logfc)          <- gene_symbols[rownames(results_sorted)]
+
+# Remove probes with no gene annotation and duplicates
+# Keep only one probe per gene (highest absolute logFC already at top
+# after sorting)
+logfc <- logfc[!is.na(names(logfc)) & names(logfc) != ""]
+logfc <- logfc[!duplicated(names(logfc))]
+cat("Total unique genes in ranked list:", length(logfc), "\n")
 
 # Convert gene symbols to Entrez IDs for KEGG
 # KEGG requires Entrez IDs rather than gene symbols
@@ -174,21 +195,29 @@ if (nrow(enrich_kegg_gsea_df) > 0) {
 # a key biological question in cancer epigenetics.
 cat("\n── Part 3: GO ORA (Directional) ────────────────────────────────────────\n")
 
-hyper_cpgs <- rownames(results_all[!is.na(results_all$adj.P.Val) &
-                                   results_all$adj.P.Val < 0.05  &
-                                   results_all$logFC > 1, ])
+# Extract gene symbols for hypermethylated probes
+hyper_genes <- unique(na.omit(gene_symbols[
+    rownames(results_all[!is.na(results_all$adj.P.Val) &
+                         results_all$adj.P.Val < 0.05  &
+                         results_all$logFC > 1, ])
+]))
+hyper_genes <- hyper_genes[hyper_genes != ""]
 
-hypo_cpgs  <- rownames(results_all[!is.na(results_all$adj.P.Val) &
-                                   results_all$adj.P.Val < 0.05  &
-                                   results_all$logFC < -1, ])
+# Extract gene symbols for hypomethylated probes
+hypo_genes  <- unique(na.omit(gene_symbols[
+    rownames(results_all[!is.na(results_all$adj.P.Val) &
+                         results_all$adj.P.Val < 0.05  &
+                         results_all$logFC < -1, ])
+]))
+hypo_genes <- hypo_genes[hypo_genes != ""]
 
-cat("Hypermethylated CpGs (FDR<0.05, logFC>1):", length(hyper_cpgs), "\n")
-cat("Hypomethylated CpGs (FDR<0.05, logFC<-1):", length(hypo_cpgs), "\n")
+cat("Unique genes hypermethylated (FDR<0.05, logFC>1):", length(hyper_genes), "\n")
+cat("Unique genes hypomethylated (FDR<0.05, logFC<-1):", length(hypo_genes), "\n")
 
 # ORA for hypermethylated genes
-cat("Running GO ORA for hypermethylated genes...\n")
+cat("\nRunning GO ORA for hypermethylated genes...\n")
 enrich_go_hyper <- enrichGO(
-    gene          = hyper_cpgs,
+    gene          = hyper_genes,
     OrgDb         = org.Hs.eg.db,
     keyType       = "SYMBOL",
     ont           = "ALL",
@@ -224,9 +253,9 @@ if (!is.null(enrich_go_hyper) && nrow(enrich_go_hyper@result) > 0) {
 }
 
 # ORA for hypomethylated genes
-cat("Running GO ORA for hypomethylated genes...\n")
+cat("\nRunning GO ORA for hypomethylated genes...\n")
 enrich_go_hypo <- enrichGO(
-    gene          = hypo_cpgs,
+    gene          = hypo_genes,
     OrgDb         = org.Hs.eg.db,
     keyType       = "SYMBOL",
     ont           = "ALL",
