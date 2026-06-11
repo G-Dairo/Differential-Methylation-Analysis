@@ -4,4 +4,9 @@ data/processed/*.rds
 data/processed/*.RData
 # Intermediate generated plots
 plots/*.pdf
+!plots/go_gsea_dotplot.pdf
+!plots/kegg_gsea_dotplot.pdf
+!plots/gsea_top_kegg_pathway.pdf
+!plots/go_ora_hyper_dotplot.pdf
+!plots/go_ora_hypo_dotplot.pdf
 results/qc/*.pdf
