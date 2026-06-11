@@ -27,7 +27,7 @@ for genome-wide methylation profiling.
 ## Pipeline
 
 ### Step 0: Environment Setup
-**Scripts:** `environment/conda_setup.sh` → `slurm/run_00_setup.sh`
+**Scripts:** `environment/conda_setup.sh` → `scripts/run_00_setup.sh`
 
 The EPIC v2.0 analysis requires a specific set of R and Bioconductor packages.
 Because the Amarel cluster only provides R 3.4.1 (too old), I use conda to
@@ -51,7 +51,7 @@ sbatch slurm/run_00_setup.sh
 ---
 
 ### Step 1: Download Raw Data
-**Script:** `slurm/01_download_data.sh`
+**Script:** `scripts/01_download_data.sh`
 
 Downloads the raw IDAT files for GSE240469 directly from NCBI GEO (~580MB).
 IDAT is Illumina's proprietary binary format that stores the raw fluorescence
@@ -61,7 +61,7 @@ and one for the Red channel (methylated) per sample, giving 80 files total for
 
 
 ```bash
-sbatch slurm/01_download_data.sh
+sbatch scripts/01_download_data.sh
 ```
 
 ---
@@ -76,7 +76,7 @@ biological context. minfi requires this sample sheet to correctly pair Red
 and Green IDAT files for each sample.
 
 ```bash
-sbatch slurm/run_02_create_samplesheet.sh
+sbatch scripts/run_02_create_samplesheet.sh
 ```
 
 **Output summary (40 samples):**
@@ -106,7 +106,7 @@ downstream analysis. Loading extended data gives us richer QC information that
 helps identify unreliable probes before any biological analysis begins.
 
 ```bash
-sbatch slurm/run_03_load_data.sh
+sbatch scripts/run_03_load_data.sh
 ```
 
 **Result:** 1,105,209 probes × 40 samples loaded successfully.
@@ -132,7 +132,7 @@ early ensures that downstream results reflect true biological signal rather
 than technical artifacts.
 
 ```bash
-sbatch slurm/run_04_quality_control.sh
+sbatch scripts/run_04_quality_control.sh
 ```
 
 **QC Results:**
@@ -146,7 +146,7 @@ sbatch slurm/run_04_quality_control.sh
 ---
 
 ### Step 5: Normalization
-**Script:** `scripts/05_normalization.R` | **SLURM:** `slurm/run_05_normalization.sh`
+**Script:** `scripts/05_normalization.R` | **SLURM:** `scripts/run_05_normalization.sh`
 
 Applies functional normalization (`preprocessFunnorm`) to correct for technical
 variation introduced during sample preparation and array hybridization. This method
@@ -168,7 +168,7 @@ normalization is the recommended approach for datasets with mixed cell types or
 multiple biological groups.
 
 ```bash
-sbatch slurm/run_05_normalization.sh
+sbatch scripts/run_05_normalization.sh
 ```
 
 > **HPC Note:** `preprocessCore` must be reinstalled with threading disabled on
@@ -182,7 +182,7 @@ sbatch slurm/run_05_normalization.sh
 ---
 
 ### Step 6: Probe Filtering
-**Script:** `scripts/06_probe_filtering.R` | **SLURM:** `slurm/run_06_probe_filtering.sh`
+**Script:** `scripts/06_probe_filtering.R` | **SLURM:** `scripts/run_06_probe_filtering.sh`
 
 Removes three categories of probes that could introduce noise or confounding
 into downstream differential methylation analysis:
@@ -227,7 +227,7 @@ sbatch slurm/run_06_probe_filtering.sh
 ---
 
 ### Step 7: Sample Outlier Detection
-**Script:** `scripts/07_outlier_detection.R` | **SLURM:** `slurm/run_07_outlier_detection.sh`
+**Script:** `scripts/07_outlier_detection.R` | **SLURM:** `scripts/run_07_outlier_detection.sh`
 
 Performs a final sample-level quality check before differential methylation
 analysis using two complementary approaches:
@@ -253,7 +253,7 @@ them before statistical testing prevents a single bad sample from generating
 false discoveries across thousands of CpG sites.
 
 ```bash
-sbatch slurm/run_07_outlier_detection.sh
+sbatch scripts/run_07_outlier_detection.sh
 ```
 
 **Results:**
@@ -271,7 +271,7 @@ sbatch slurm/run_07_outlier_detection.sh
 ---
 
 ### Step 8: Differential Methylation Analysis
-**Script:** `scripts/08_differential_methylation.R` | **SLURM:** `slurm/run_08_differential_methylation.sh`
+**Script:** `scripts/08_differential_methylation.R` | **SLURM:** `scripts/run_08_differential_methylation.sh`
 
 Identifies Differentially Methylated Positions (DMPs) between LNCAP
 (prostate cancer) and PREC (normal prostate epithelial) cell lines using
@@ -314,7 +314,7 @@ silences tumour suppressor genes.
 ---
 
 ### Step 9: Differentially Methylated Regions
-**Script:** `scripts/09_dmr_analysis.R` | **SLURM:** `slurm/run_09_dmr_analysis.sh`
+**Script:** `scripts/09_dmr_analysis.R` | **SLURM:** `scripts/run_09_dmr_analysis.sh`
 
 Identifies Differentially Methylated Regions (DMRs) using **DMRcate**.
 Unlike DMPs which test individual CpG sites independently, DMR analysis
@@ -338,7 +338,7 @@ nearby sites — making false positives far less likely than with
 single-probe testing.
 
 ```bash
-sbatch slurm/run_09_dmr_analysis.sh
+sbatch scripts/run_09_dmr_analysis.sh
 ```
 
 **Results:**
@@ -362,7 +362,7 @@ independently rediscovered by this pipeline.
 ---
 
 ### Step 10: Functional Enrichment Analysis
-**Script:** `scripts/10_functional_enrichment.R` | **SLURM:** `slurm/run_10_functional_enrichment.sh`
+**Script:** `scripts/10_functional_enrichment.R` | **SLURM:** `scripts/run_10_functional_enrichment.sh`
 
 Performs functional enrichment analysis to identify which biological
 processes and pathways are affected by the methylation differences,
@@ -381,7 +381,7 @@ are the genes most likely to have their expression affected by the
 methylation changes.
 
 ```bash
-sbatch slurm/run_10_functional_enrichment.sh
+sbatch scripts/run_10_functional_enrichment.sh
 ```
 
 **Results:**
@@ -399,7 +399,7 @@ sbatch slurm/run_10_functional_enrichment.sh
 ---
 
 ### Step 11: Enrichment Visualization
-**Script:** `scripts/11_enrichment_visualization.R` | **SLURM:** `slurm/run_11_enrichment_visualization.sh`
+**Script:** `scripts/11_enrichment_visualization.R` | **SLURM:** `scripts/run_11_enrichment_visualization.sh`
 
 Generates publication-quality visualizations of the functional enrichment
 results using **clusterProfiler** with two complementary approaches:
@@ -421,7 +421,7 @@ KEGG pathway databases are tested. Gene symbols are extracted from the
 KEGG analysis.
 
 ```bash
-sbatch slurm/run_11_enrichment_visualization.sh
+sbatch scripts/run_11_enrichment_visualization.sh
 ```
 
 **Output plots:**
