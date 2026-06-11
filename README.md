@@ -45,7 +45,7 @@ gets identical results regardless of when they run it.
 bash environment/conda_setup.sh
 
 # Then install R packages
-sbatch scripts/run_00_setup.sh
+sbatch environment/run_00_setup.sh
 ```
 
 ---
