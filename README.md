@@ -45,7 +45,7 @@ gets identical results regardless of when they run it.
 bash environment/conda_setup.sh
 
 # Then install R packages
-sbatch slurm/run_00_setup.sh
+sbatch scripts/run_00_setup.sh
 ```
 
 ---
@@ -67,7 +67,7 @@ sbatch scripts/01_download_data.sh
 ---
 
 ### Step 2: Create Sample Sheet
-**Script:** `scripts/02_create_samplesheet.R` | **SLURM:** `slurm/run_02_create_samplesheet.sh`
+**Script:** `scripts/02_create_samplesheet.R` | **SLURM:** `scripts/run_02_create_samplesheet.sh`
 
 Parses the IDAT filenames to extract sample metadata — cell line, DNA input
 concentration, replicate number, and treatment condition. This produces a
@@ -93,7 +93,7 @@ sbatch scripts/run_02_create_samplesheet.sh
 ---
 
 ### Step 3: Load Raw Data
-**Script:** `scripts/03_load_data.R` | **SLURM:** `slurm/run_03_load_data.sh`
+**Script:** `scripts/03_load_data.R` | **SLURM:** `scripts/run_03_load_data.sh`
 
 Reads all 80 IDAT files into R as an `RGChannelSetExtended` object using minfi.
 This object stores the raw Red and Green fluorescence intensities for all
@@ -114,7 +114,7 @@ sbatch scripts/run_03_load_data.sh
 ---
 
 ### Step 4: Quality Control
-**Script:** `scripts/04_quality_control.R` | **SLURM:** `slurm/run_04_quality_control.sh`
+**Script:** `scripts/04_quality_control.R` | **SLURM:** `scripts/run_04_quality_control.sh`
 
 Performs quality control using detection p-values — a statistical measure of
 whether each probe's signal is distinguishable from background noise. The
@@ -212,7 +212,7 @@ reflect technical artifacts or genetic variation rather than true epigenetic
 changes.
 
 ```bash
-sbatch slurm/run_06_probe_filtering.sh
+sbatch scripts/run_06_probe_filtering.sh
 ```
 
 **Filtering Summary:**
@@ -293,7 +293,7 @@ M-values are used for statistical testing while beta values are retained
 for biological interpretation and visualization.
 
 ```bash
-sbatch slurm/run_08_differential_methylation.sh
+sbatch scripts/run_08_differential_methylation.sh
 ```
 
 **Results:**
